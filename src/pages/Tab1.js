@@ -155,7 +155,7 @@ const Tab1 = () => {
           return (
             <div className="beacon-single">
             <p>Minor: {el.minor}</p>
-            <p>Minor: {el.major}</p>
+            <p>Major: {el.major}</p>
             <p>Rssi: {el.rssi}</p>
             <p>Proximity: {el.proximity}</p>
             </div>
