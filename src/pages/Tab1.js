@@ -4,19 +4,19 @@ import './Tab1.css';
 import { IBeacon } from '@ionic-native/ibeacon';
 const Tab1 = () => {
   var beaconsArr = localStorage.getItem("beacons");
+  console.log("beaconshere", beaconsArr);
   const [isScan, setIsScan] = useState(false);
   const [beaconName, setBeaconName] = useState('');
   const [beaconUuid, setBeaconUuid] = useState('');
   const [beaconsArray, setBeaconsArray] = useState(beaconsArr !== null ? JSON.parse(beaconsArr) : [] );
   const [text, setText] = useState('Нет событий');
-  const [text2, setText2] = useState({name: '', rssi: '', proximity: ''});
-  // const [text3, setText3] = useState('Нет событий3');
+  const [text2, setText2] = useState([{name: '', rssi: '', proximity: ''}]);
   let addBeacon = () => {
     if (beaconName !== '' && beaconUuid !== '') {
         let temp = beaconsArray;
         temp.push({
           name: beaconName,
-          uuid: beaconUuid
+          uuid: beaconUuid,
         })
         setBeaconsArray(temp);
         setBeaconName('');
@@ -31,63 +31,37 @@ const Tab1 = () => {
   .subscribe(
     data =>  {
       if (data.beacons.length > 0) {
-        setText2({
-          name: data.region.identifier,
-          rssi: data.beacons[0].rssi,
-          proximity: data.beacons[0].proximity
+        console.log("TOGGLED");
+        console.log(data.beacons);
+        setText2([{name: '', rssi: '', proximity: ''}]);
+        var arr = [];
+        data.beacons.forEach((item, i) => {
+          arr.push({
+            name: data.region.identifier,
+            rssi: item.rssi,
+            proximity: item.proximity
+          })
         });
+        setText2(arr);
         closeScanner();
-        setInterval(function() {
-          openScanner();
-        }, 60000);
+
+        // openScanner();
       }
   },
     error => console.error()
   );
 
-
-  // delegate.didEnterRegion()
-  // .subscribe(
-  //   data => {
-  //     setText(JSON.stringify(data));
-  //   }
-  // );
-  // delegate.didDetermineStateForRegion()
-  // .subscribe(
-  //   data => {
-  //     setText3(JSON.stringify(data));
-  //   }
-  // );
-  // delegate.didStartMonitoringForRegion()
-  // .subscribe(
-  //   data => console.log('didStartMonitoringForRegion: ', data),
-  //   error => console.error()
-  // );
-
-  // let beaconsArray = [
-  //   {
-  //     name: "wEci",
-  //     uuid: 'f7826da6-4fa2-4e98-8024-bc5b71e0893e',
-  //   },
-  //   {
-  //     name: "wEc2",
-  //     uuid: '6665542b-41a1-5e00-931c-6a82db9b78c1',
-  //   },
-  // ]
   const closeScanner = () => {
     beaconsArray.forEach(el => {
       let beaconRegion = IBeacon.BeaconRegion(el.name, el.uuid);
-      IBeacon.stopMonitoringForRegion(beaconRegion)
-      .then(
-        () => {},
-        error => alert(error)
-      );
       IBeacon.stopRangingBeaconsInRegion(beaconRegion)
       .then(
         () => {
-          // setText('Нет событий');
-          // setText2('Нет событий2');
-          // setText3('Нет событий3');
+          setIsScan(false);
+          // setTimeout(function() {
+          //   openScanner();
+          // }, 3000);
+
       },
         error => alert(error)
       );
@@ -104,14 +78,9 @@ const Tab1 = () => {
   const openScanner = () => {
     beaconsArray.forEach(el => {
       let beaconRegion = IBeacon.BeaconRegion(el.name, el.uuid);
-      IBeacon.startMonitoringForRegion(beaconRegion)
-      .then(
-        () => setText('Поиск...'),
-        error => alert(error)
-      );
       IBeacon.startRangingBeaconsInRegion(beaconRegion)
       .then(
-        () => console.log('startRangingBeaconsInRegion'),
+        () => setText('Поиск...'),
         error => alert(error)
       );
     })
@@ -169,11 +138,17 @@ const Tab1 = () => {
           isScan === true && <div className='beacon-info'><p>Поиск...</p></div>
         }
         {
-          isScan === true  &&
         <div className='beacon-info'>
-          <p>Имя: {text2.name}</p>
-          <p>Rssi: {text2.rssi}</p>
-          <p>Proximity: {text2.proximity}</p>
+        {text2.map((el, i) => {
+          return (
+            <>
+              <p>Имя: {el.name}</p>
+              <p>Rssi: {el.rssi}</p>
+              <p>Proximity: {el.proximity}</p>
+            </>
+          )
+        })}
+
         </div>
         }
 
