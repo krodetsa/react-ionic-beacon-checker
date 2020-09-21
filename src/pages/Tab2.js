@@ -3,9 +3,8 @@ import { IonContent,IonButton, IonHeader, IonPage, IonTitle, IonToolbar, IonItem
 import './Tab1.css';
 import axios from 'axios';
 import { IBeacon } from '@ionic-native/ibeacon';
-const Tab1 = () => {
+const Tab2 = () => {
   var beaconsArr = localStorage.getItem("beacons");
-  console.log("beaconshere", beaconsArr);
   const [isScan, setIsScan] = useState(false);
   const [beaconName, setBeaconName] = useState('');
   const [dataToSend, setDataToSend] = useState([]);
@@ -70,9 +69,9 @@ const Tab1 = () => {
       .then(
         () => {
           setIsScan(false);
-          // setTimeout(function() {
-          //   openScanner();
-          // }, 3000);
+          setTimeout(function() {
+            startScan();
+          }, 3000);
 
       },
         error => alert(error)
@@ -84,7 +83,16 @@ const Tab1 = () => {
     setIsScan(true);
   }
   const stopScan = () => {
-    closeScanner();
+    beaconsArray.forEach(el => {
+      let beaconRegion = IBeacon.BeaconRegion(el.name, el.uuid);
+      IBeacon.stopRangingBeaconsInRegion(beaconRegion)
+      .then(
+        () => {
+          setIsScan(false);
+      },
+        error => alert(error)
+      );
+    })
     setIsScan(false);
   }
   const openScanner = () => {
@@ -154,10 +162,10 @@ const Tab1 = () => {
         {text2.map((el, i) => {
           return (
             <div className="beacon-single">
-            <p>Minor: {el.minor}</p>
-            <p>Minor: {el.major}</p>
-            <p>Rssi: {el.rssi}</p>
-            <p>Proximity: {el.proximity}</p>
+              <p>Minor: {el.minor}</p>
+              <p>Minor: {el.major}</p>
+              <p>Rssi: {el.rssi}</p>
+              <p>Proximity: {el.proximity}</p>
             </div>
           )
         })}
@@ -170,4 +178,4 @@ const Tab1 = () => {
   );
 };
 
-export default Tab1;
+export default Tab2;

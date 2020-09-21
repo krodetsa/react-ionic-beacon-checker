@@ -5,3 +5,6 @@
 .beacon-name {
   font-weight: bold;
 }
+.beacon-single {
+  border-top: 1px solid;
+}
