@@ -7,6 +7,7 @@ const Tab1 = () => {
   var beaconsArr = localStorage.getItem("beacons");
   var uidFromStorage = localStorage.getItem("uuid");
   const [deviceUuid, setDeviceUuid] = useState(uidFromStorage !== null ? uidFromStorage : '' );
+  const [pointValue, setPointValue] = useState('');
   const [isScan, setIsScan] = useState(false);
   const [beaconName, setBeaconName] = useState('test');
   const [dataToSend, setDataToSend] = useState([]);
@@ -25,7 +26,7 @@ const Tab1 = () => {
         setBeaconName('');
         setBeaconUuid('');
         localStorage.setItem("beacons", JSON.stringify(temp));
-
+        localStorage.setItem("uuid", deviceUuid);
     }
   }
   IBeacon.requestAlwaysAuthorization();
@@ -34,7 +35,6 @@ const Tab1 = () => {
   .subscribe(
     data =>  {
       if (data.beacons.length > 0) {
-        console.log(JSON.stringify(data.beacons));
         setText2([{name: '', rssi: '', proximity: ''}]);
         var arr = [];
         data.beacons.forEach((item, i) => {
@@ -48,16 +48,22 @@ const Tab1 = () => {
         setDataToSend(data.beacons);
         setText2(arr);
         closeScanner();
-        // axios({
-        //   method: 'post',
-        //   url: '',
-        //   data: {
-        //     data: dataToSend,
-        //   }
-        // })
-        // .then(res => {
-        //   console.log('Query was sent')
-        // })
+        if(data.beacons !== []){
+          axios({
+          method: 'post',
+          url: 'https://egts.ficom-it.info/api/request.php',
+          data: {
+            aksi: 'setPoint',
+            uid: deviceUuid,
+            pointName: pointValue,
+            beacons: data.beacons
+          }
+        })
+        .then(res => {
+          console.log('Query was sent');
+          setPointValue('')
+        })
+      }
         // openScanner();
       }
   },
@@ -71,18 +77,17 @@ const Tab1 = () => {
       .then(
         () => {
           setIsScan(false);
-          // setTimeout(function() {
-          //   openScanner();
-          // }, 3000);
-
+          setPointValue('');
       },
         error => alert(error)
       );
     })
   }
   const startScan = () => {
-    openScanner();
-    setIsScan(true);
+    if (pointValue !== '') {
+      openScanner();
+      setIsScan(true);
+    }
   }
   const stopScan = () => {
     closeScanner();
@@ -140,6 +145,14 @@ const Tab1 = () => {
             )
           })
         }
+        <IonItem>
+          <IonLabel position="stacked">Название точки</IonLabel>
+            <IonInput
+            value={pointValue}
+            placeholder="Введите название точки"
+            onIonChange={e => setPointValue(e.detail.value)} clearInput>
+            </IonInput>
+        </IonItem>
         {
           beaconsArray.length > 0 &&
           <div>
@@ -154,11 +167,11 @@ const Tab1 = () => {
         <div className='beacon-info'>
         {text2.map((el, i) => {
           return (
-            <div className="beacon-single">
-            <p>Minor: {el.minor}</p>
-            <p>Major: {el.major}</p>
-            <p>Rssi: {el.rssi}</p>
-            <p>Proximity: {el.proximity}</p>
+            <div key={i} className="beacon-single">
+              <p>Minor: {el.minor}</p>
+              <p>Major: {el.major}</p>
+              <p>Rssi: {el.rssi}</p>
+              <p>Proximity: {el.proximity}</p>
             </div>
           )
         })}

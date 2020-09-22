@@ -25,6 +25,7 @@ const Tab2 = () => {
         setBeaconName('');
         setBeaconUuid('');
         localStorage.setItem("beacons", JSON.stringify(temp));
+        localStorage.setItem("uuid", deviceUuid);
 
     }
   }
@@ -48,16 +49,19 @@ const Tab2 = () => {
         setDataToSend(data.beacons);
         setText2(arr);
         closeScanner();
-        // axios({
-        //   method: 'post',
-        //   url: '',
-        //   data: {
-        //     data: dataToSend,
-        //   }
-        // })
-        // .then(res => {
-        //   console.log('Query was sent')
-        // })
+        if(data.beacons !== []){
+          axios({
+          method: 'post',
+          url: 'https://egts.ficom-it.info/api/request.php',
+          data: {
+            aksi: 'egts',
+            uid: deviceUuid,
+            beacons: data.beacons
+          }
+        })
+        .then(res => {
+          console.log('Query was sent')
+        })}
         // openScanner();
       }
   },
@@ -163,7 +167,7 @@ const Tab2 = () => {
         <div className='beacon-info'>
         {text2.map((el, i) => {
           return (
-            <div className="beacon-single">
+            <div key={i} className="beacon-single">
               <p>Minor: {el.minor}</p>
               <p>Major: {el.major}</p>
               <p>Rssi: {el.rssi}</p>
