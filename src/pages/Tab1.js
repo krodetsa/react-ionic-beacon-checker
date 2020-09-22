@@ -5,19 +5,20 @@ import axios from 'axios';
 import { IBeacon } from '@ionic-native/ibeacon';
 const Tab1 = () => {
   var beaconsArr = localStorage.getItem("beacons");
-  console.log("beaconshere", beaconsArr);
+  var uidFromStorage = localStorage.getItem("uuid");
+  const [deviceUuid, setDeviceUuid] = useState(uidFromStorage !== null ? uidFromStorage : '' );
   const [isScan, setIsScan] = useState(false);
-  const [beaconName, setBeaconName] = useState('');
+  const [beaconName, setBeaconName] = useState('test');
   const [dataToSend, setDataToSend] = useState([]);
   const [beaconUuid, setBeaconUuid] = useState('');
   const [beaconsArray, setBeaconsArray] = useState(beaconsArr !== null ? JSON.parse(beaconsArr) : [] );
   const [text, setText] = useState('Нет событий');
   const [text2, setText2] = useState([{minor: '', major:'', rssi: '', proximity: ''}]);
   let addBeacon = () => {
-    if (beaconName !== '' && beaconUuid !== '') {
+    if (deviceUuid !== '' && beaconUuid !== '') {
         let temp = beaconsArray;
         temp.push({
-          name: beaconName,
+          name: 'test',
           uuid: beaconUuid,
         })
         setBeaconsArray(temp);
@@ -113,11 +114,11 @@ const Tab1 = () => {
           </IonToolbar>
         </IonHeader>
         <IonItem>
-          <IonLabel position="stacked">Beacon Name</IonLabel>
+          <IonLabel position="stacked">ID Телефона</IonLabel>
             <IonInput
-            value={beaconName}
-            placeholder="Введите имя"
-            onIonChange={e => setBeaconName(e.detail.value)} clearInput>
+            value={deviceUuid}
+            placeholder="Введите ID Телефона"
+            onIonChange={e => setDeviceUuid(e.detail.value)} clearInput>
             </IonInput>
         </IonItem>
         <IonItem>
