@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect }  from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import {
   IonApp,
@@ -13,7 +13,7 @@ import { IonReactRouter } from '@ionic/react-router';
 import { ellipse, square, triangle } from 'ionicons/icons';
 import Tab1 from './pages/Tab1.js';
 import Tab2 from './pages/Tab2.js';
-import Tab3 from './pages/Tab3';
+import Tab3 from './pages/Tab3.js';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -34,13 +34,24 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
-const App: React.FC = () => (
+const App = () => {
+  var uidFromStorage = localStorage.getItem("uuid");
+  const [deviceUuid, setDeviceUuid] = useState(uidFromStorage !== null ? uidFromStorage : '' );
+  var setDeviceUuid1 = (e) => {
+    console.log(e);
+    setDeviceUuid(e)
+  }
+  return(
   <IonApp>
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
-          <Route path="/tab1" component={Tab1} exact={true} />
-          <Route path="/tab2" component={Tab2} exact={true} />
+          <Route path="/tab1" exact={true} render={() =>
+            <Tab1 deviceUuid={deviceUuid} setDeviceUuid={setDeviceUuid1} />
+            } />
+            <Route path="/tab2" exact={true} render={() =>
+              <Tab2 deviceUuid={deviceUuid} setDeviceUuid={setDeviceUuid1} />
+              } />
           <Route path="/tab3" component={Tab3} />
           <Route path="/" render={() => <Redirect to="/tab1" />} exact={true} />
         </IonRouterOutlet>
@@ -57,6 +68,6 @@ const App: React.FC = () => (
       </IonTabs>
     </IonReactRouter>
   </IonApp>
-);
+);}
 
 export default App;

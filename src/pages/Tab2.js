@@ -3,7 +3,7 @@ import { IonContent,IonButton, IonHeader, IonPage, IonTitle, IonToolbar, IonItem
 import './Tab1.css';
 import axios from 'axios';
 import { IBeacon } from '@ionic-native/ibeacon';
-const Tab2 = () => {
+const Tab2 = (props) => {
   var beaconsArr = localStorage.getItem("beacons");
   var uidFromStorage = localStorage.getItem("uuid");
   const [deviceUuid, setDeviceUuid] = useState(uidFromStorage !== null ? uidFromStorage : '' );
@@ -11,7 +11,7 @@ const Tab2 = () => {
   const [beaconName, setBeaconName] = useState('test');
   const [dataToSend, setDataToSend] = useState([]);
   const [beaconUuid, setBeaconUuid] = useState('');
-  const [beaconsArray, setBeaconsArray] = useState(beaconsArr !== null ? JSON.parse(beaconsArr) : [] );
+  const [beaconsArray, setBeaconsArray] = useState( [1] );
   const [text, setText] = useState('Нет событий');
   const [text2, setText2] = useState([{minor: '', major:'', rssi: '', proximity: ''}]);
   let addBeacon = () => {
@@ -55,12 +55,12 @@ const Tab2 = () => {
           url: 'https://egts.ficom-it.info/api/request.php',
           data: {
             aksi: 'egts',
-            uid: deviceUuid,
+            uid: props.deviceUuid,
             beacons: data.beacons
           }
         })
         .then(res => {
-          console.log('Query was sent')
+          console.log('Query was sent', props.deviceUuid)
         })}
         // openScanner();
       }
@@ -69,8 +69,7 @@ const Tab2 = () => {
   );
 
   const closeScanner = () => {
-    beaconsArray.forEach(el => {
-      let beaconRegion = IBeacon.BeaconRegion(el.name, el.uuid);
+      let beaconRegion = IBeacon.BeaconRegion('test', 'f7826da6-4fa2-4e98-8024-bc5b71e0893e');
       IBeacon.stopRangingBeaconsInRegion(beaconRegion)
       .then(
         () => {
@@ -82,15 +81,13 @@ const Tab2 = () => {
       },
         error => alert(error)
       );
-    })
   }
   const startScan = () => {
     openScanner();
     setIsScan(true);
   }
   const stopScan = () => {
-    beaconsArray.forEach(el => {
-      let beaconRegion = IBeacon.BeaconRegion(el.name, el.uuid);
+      let beaconRegion = IBeacon.BeaconRegion('test', 'f7826da6-4fa2-4e98-8024-bc5b71e0893e');
       IBeacon.stopRangingBeaconsInRegion(beaconRegion)
       .then(
         () => {
@@ -98,18 +95,15 @@ const Tab2 = () => {
       },
         error => alert(error)
       );
-    })
     setIsScan(false);
   }
   const openScanner = () => {
-    beaconsArray.forEach(el => {
-      let beaconRegion = IBeacon.BeaconRegion(el.name, el.uuid);
+      let beaconRegion = IBeacon.BeaconRegion('test', 'f7826da6-4fa2-4e98-8024-bc5b71e0893e');
       IBeacon.startRangingBeaconsInRegion(beaconRegion)
       .then(
         () => setText('Поиск...'),
         error => alert(error)
       );
-    })
 
 
  };
@@ -126,33 +120,8 @@ const Tab2 = () => {
             <IonTitle size="large">Tab 1</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonItem>
-          <IonLabel position="stacked">ID Телефона</IonLabel>
-            <IonInput
-            value={deviceUuid}
-            placeholder="Введите ID Телефона"
-            onIonChange={e => setDeviceUuid(e.detail.value)} clearInput>
-            </IonInput>
-        </IonItem>
-        <IonItem>
-          <IonLabel position="stacked">Beacon UUID</IonLabel>
-            <IonInput
-            value={beaconUuid}
-            placeholder="Введите UUID"
-            onIonChange={e => setBeaconUuid(e.detail.value)} clearInput>
-            </IonInput>
-        </IonItem>
-        <IonButton expand="full" onClick={addBeacon}>Добавить</IonButton>
-        {
-         beaconsArray.map((el,i) => {
-            return(
-              <div className='beacon-info' key={i}>
-                <p className='beacon-name'>{el.name}</p>
-                <p>{el.uuid}</p>
-              </div>
-            )
-          })
-        }
+
+
         {
           beaconsArray.length > 0 &&
           <div>
