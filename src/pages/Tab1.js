@@ -16,7 +16,17 @@ const Tab1 = (props) => {
   const [dataToSend, setDataToSend] = useState([]);
   const [beaconUuid, setBeaconUuid] = useState('');
   const [text, setText] = useState('Нет событий');
+  const [button1, setButton1] = useState(false);
+  const [button2, setButton2] = useState(false);
+  const [button3, setButton3] = useState(false);
+  const [button4, setButton4] = useState(false);
   const [text2, setText2] = useState([{minor: '', major:'', rssi: '', proximity: ''}]);
+  useEffect(() => {
+     setButton1(false);
+     setButton2(false);
+     setButton3(false);
+     setButton4(false);
+  },[pointValue]);
   IBeacon.requestAlwaysAuthorization();
   let delegate = IBeacon.Delegate();
   delegate.didRangeBeaconsInRegion()
@@ -50,6 +60,19 @@ const Tab1 = (props) => {
         })
         .then(res => {
           console.log('Query was sent', props.deviceUuid );
+
+            if (direction === 1) {
+            setButton1(true)
+            }
+            if (direction === 2) {
+            setButton2(true)
+            }
+            if (direction === 3) {
+            setButton3(true)
+            }
+            if (direction === 4) {
+            setButton4(true)
+            }
         })
       }
         // openScanner();
@@ -78,6 +101,7 @@ const Tab1 = (props) => {
       setDirection(1);
       openScanner();
       setIsScan(true);
+
     }
   }
   const startScan2 = () => {
@@ -85,6 +109,7 @@ const Tab1 = (props) => {
       setDirection(2);
       openScanner();
       setIsScan(true);
+
     }
   }
   const startScan3 = () => {
@@ -92,6 +117,7 @@ const Tab1 = (props) => {
       setDirection(3);
       openScanner();
       setIsScan(true);
+
     }
   }
   // console.log(props);
@@ -100,6 +126,7 @@ const Tab1 = (props) => {
       setDirection(4);
       openScanner();
       setIsScan(true);
+
     }
   }
   const stopScan = () => {
@@ -124,7 +151,7 @@ const Tab1 = (props) => {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Tab 1</IonTitle>
+            <IonTitle size="large">Поиск устройств</IonTitle>
           </IonToolbar>
         </IonHeader>
       { show === true &&
@@ -179,10 +206,15 @@ const Tab1 = (props) => {
               <IonSelectOption value="Х21">Х21</IonSelectOption>
               <IonSelectOption value="Х22">Х22</IonSelectOption>
               <IonSelectOption value="Х23">Х23</IonSelectOption>
+              <IonSelectOption value="Х14">Х24</IonSelectOption>
+              <IonSelectOption value="Х15">Х25</IonSelectOption>
+              <IonSelectOption value="Х16">Х26</IonSelectOption>
+              <IonSelectOption value="Х17">Х27</IonSelectOption>
               <IonSelectOption value="Т1">Т1</IonSelectOption>
               <IonSelectOption value="Т2">Т2</IonSelectOption>
               <IonSelectOption value="Т3">Т3</IonSelectOption>
               <IonSelectOption value="Т4">Т4</IonSelectOption>
+              <IonSelectOption value="Т5">Т5</IonSelectOption>
               <IonSelectOption value="П1">П1</IonSelectOption>
               <IonSelectOption value="П2">П2</IonSelectOption>
               <IonSelectOption value="П3">П3</IonSelectOption>
@@ -235,10 +267,10 @@ const Tab1 = (props) => {
           </IonItem>
           <div>
 
-            {isScan === false && <IonButton expand="full" onClick={startScan1}>Поиск 1</IonButton>}
-            {isScan === false && <IonButton expand="full" onClick={startScan2}>Поиск 2</IonButton>}
-            {isScan === false && <IonButton expand="full" onClick={startScan3}>Поиск 3</IonButton>}
-            {isScan === false && <IonButton expand="full" onClick={startScan4}>Поиск 4</IonButton>}
+            {isScan === false && <IonButton color={button1 === true ? "success": 'primary'} expand="full" onClick={startScan1}>Север</IonButton>}
+            {isScan === false && <IonButton color={button2 === true ? "success": 'primary'} expand="full" onClick={startScan2}>Запад</IonButton>}
+            {isScan === false && <IonButton color={button3 === true ? "success": 'primary'} expand="full" onClick={startScan3}>Юг</IonButton>}
+            {isScan === false && <IonButton color={button4 === true ? "success": 'primary'} expand="full" onClick={startScan4}>Восток</IonButton>}
             {isScan === true && <IonButton expand="full" onClick={stopScan}>Остановить поиск</IonButton>}
 
           </div>
