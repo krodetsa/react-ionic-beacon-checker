@@ -206,10 +206,10 @@ const Tab1 = (props) => {
               <IonSelectOption value="Х21">Х21</IonSelectOption>
               <IonSelectOption value="Х22">Х22</IonSelectOption>
               <IonSelectOption value="Х23">Х23</IonSelectOption>
-              <IonSelectOption value="Х14">Х24</IonSelectOption>
-              <IonSelectOption value="Х15">Х25</IonSelectOption>
-              <IonSelectOption value="Х16">Х26</IonSelectOption>
-              <IonSelectOption value="Х17">Х27</IonSelectOption>
+              <IonSelectOption value="Х24">Х24</IonSelectOption>
+              <IonSelectOption value="Х25">Х25</IonSelectOption>
+              <IonSelectOption value="Х26">Х26</IonSelectOption>
+              <IonSelectOption value="Х27">Х27</IonSelectOption>
               <IonSelectOption value="Т1">Т1</IonSelectOption>
               <IonSelectOption value="Т2">Т2</IonSelectOption>
               <IonSelectOption value="Т3">Т3</IonSelectOption>
