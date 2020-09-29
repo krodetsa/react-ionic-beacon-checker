@@ -21,6 +21,7 @@ const Tab1 = (props) => {
   const [button3, setButton3] = useState(false);
   const [button4, setButton4] = useState(false);
   const [text2, setText2] = useState([{minor: '', major:'', rssi: '', proximity: ''}]);
+  let beaconRegion = IBeacon.BeaconRegion('test', 'f7826da6-4fa2-4e98-8024-bc5b71e0893e');
   useEffect(() => {
      setButton1(false);
      setButton2(false);
@@ -33,6 +34,7 @@ const Tab1 = (props) => {
   .subscribe(
     data =>  {
       if (data.beacons.length > 0) {
+        closeScanner();
         setText2([{name: '', rssi: '', proximity: ''}]);
         var arr = [];
         data.beacons.forEach((item, i) => {
@@ -45,7 +47,7 @@ const Tab1 = (props) => {
         });
         setDataToSend(data.beacons);
         setText2(arr);
-        closeScanner();
+
         if(data.beacons !== []){
           axios({
           method: 'post',
@@ -82,7 +84,7 @@ const Tab1 = (props) => {
   );
 
   const closeScanner = () => {
-      let beaconRegion = IBeacon.BeaconRegion('test', 'f7826da6-4fa2-4e98-8024-bc5b71e0893e');
+
       IBeacon.stopRangingBeaconsInRegion(beaconRegion)
       .then(
         () => {
@@ -134,7 +136,6 @@ const Tab1 = (props) => {
     setIsScan(false);
   }
   const openScanner = () => {
-      let beaconRegion = IBeacon.BeaconRegion('test', 'f7826da6-4fa2-4e98-8024-bc5b71e0893e');
       IBeacon.startRangingBeaconsInRegion(beaconRegion)
       .then(
         () => setText('Поиск...'),
