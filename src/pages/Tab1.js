@@ -23,10 +23,7 @@ const Tab1 = (props) => {
     setWasDelivered(0);
     setWasSent(0);
     setText2([]);
-    stopScan();
-    if (location.pathname === '/tab1') {
-      startScan();
-    }
+    startScan();
   },[location.pathname]);
   let addBeacon = () => {
     if (deviceUuid !== '' && beaconUuid !== '') {
