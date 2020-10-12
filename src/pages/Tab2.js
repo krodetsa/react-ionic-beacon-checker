@@ -46,36 +46,50 @@ const Tab2 = (props) => {
   .subscribe(
     data =>  {
       if (data.beacons.length > 0) {
-        closeScanner();
+        // closeScanner();
         setWasSent(wasSent + 1);
-        console.log(JSON.stringify(data.beacons));
+        // console.log(JSON.stringify(data.beacons));
         // setText2([{name: '', rssi: '', proximity: ''}]);
-        var arr = text2;
-        data.beacons.forEach((item, i) => {
-          arr.push({
-            minor: item.minor,
-            major: item.major,
-            rssi: item.rssi,
-            proximity: item.proximity
-          })
-        });
+        var arr = [];
+        // data.beacons.forEach((item, i) => {
+        //   arr.push({
+        //     minor: item.minor,
+        //     major: item.major,
+        //     rssi: item.rssi,
+        //     proximity: item.proximity
+        //   })
+        // });
         setDataToSend(data.beacons);
-        setText2(arr);
-        console.log('AAAAAAAAAAAAAAAAA', JSON.stringify(text2));
-        if(data.beacons !== []){
+        // setText2(arr.sort(function(a, b) {
+        //   return a.rssi - b.rssi;
+        // }).reverse());
+        // console.log('AAAAAAAAAAAAAAAAA', JSON.stringify(text2));
+        if(data.beacons !== []) {
+          data.beacons.forEach((item, i) => {
+            arr.push({
+              minor: item.minor,
+              major: item.major,
+              rssi: item.rssi,
+              proximity: item.proximity
+            })
+          });
+          setText2(arr.sort(function(a, b) {
+            return a.rssi - b.rssi;
+          }).reverse());
           axios({
-          method: 'post',
-          url: 'https://egts.ficom-it.info/api/request.php',
-          data: {
-            aksi: 'egts',
-            uid: props.deviceUuid,
-            beacons: data.beacons
+            method: 'post',
+            url: 'https://egts.ficom-it.info/api/request.php',
+            data: {
+              aksi: 'egts',
+              uid: props.deviceUuid,
+              beacons: data.beacons
           }
         })
         .then(res => {
-          console.log('Query was sent', props.deviceUuid);
           setWasDelivered(wasDelivered + 1);
-        })}
+        });
+        data.beacons = [];
+      }
         // openScanner();
       }
   },
@@ -83,7 +97,7 @@ const Tab2 = (props) => {
   );
 
   const closeScanner = () => {
-    console.log("SCAN IS STOPPED");
+    // console.log("SCAN IS STOPPED");
       IBeacon.stopRangingBeaconsInRegion(beaconRegion)
       .then(
         () => {
@@ -111,7 +125,7 @@ const Tab2 = (props) => {
     setIsScan(false);
   }
   const openScanner = () => {
-    console.log("SCAN IS STARTED");
+    // console.log("SCAN IS STARTED");
       IBeacon.startRangingBeaconsInRegion(beaconRegion)
       .then(
         () => setText('Поиск...'),
