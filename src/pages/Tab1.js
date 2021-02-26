@@ -25,45 +25,15 @@ const Tab1 = (props) => {
     setText2([]);
     startScan();
   },[location.pathname]);
-  let addBeacon = () => {
-    if (deviceUuid !== '' && beaconUuid !== '') {
-        let temp = beaconsArray;
-        temp.push({
-          name: 'test',
-          uuid: beaconUuid,
-        })
-        setBeaconsArray(temp);
-        setBeaconName('');
-        setBeaconUuid('');
-        localStorage.setItem("beacons", JSON.stringify(temp));
-        localStorage.setItem("uuid", deviceUuid);
-
-    }
-  }
   IBeacon.requestAlwaysAuthorization();
   let delegate = IBeacon.Delegate();
   delegate.didRangeBeaconsInRegion()
   .subscribe(
     data =>  {
       if (data.beacons.length > 0) {
-        // closeScanner();
         setWasSent(wasSent + 1);
-        // console.log(JSON.stringify(data.beacons));
-        // setText2([{name: '', rssi: '', proximity: ''}]);
         var arr = [];
-        // data.beacons.forEach((item, i) => {
-        //   arr.push({
-        //     minor: item.minor,
-        //     major: item.major,
-        //     rssi: item.rssi,
-        //     proximity: item.proximity
-        //   })
-        // });
         setDataToSend(data.beacons);
-        // setText2(arr.sort(function(a, b) {
-        //   return a.rssi - b.rssi;
-        // }).reverse());
-        // console.log('AAAAAAAAAAAAAAAAA', JSON.stringify(text2));
         if(data.beacons !== []) {
           data.beacons.forEach((item, i) => {
             arr.push({
@@ -90,14 +60,12 @@ const Tab1 = (props) => {
         });
         data.beacons = [];
       }
-        // openScanner();
       }
   },
     error => console.error()
   );
 
   const closeScanner = () => {
-    // console.log("SCAN IS STOPPED");
       IBeacon.stopRangingBeaconsInRegion(beaconRegion)
       .then(
         () => {
