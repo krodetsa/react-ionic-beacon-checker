@@ -6,6 +6,14 @@ let beaconRegion = IBeacon.BeaconRegion('test', 'f7826da6-4fa2-4e98-8024-bc5b71e
 IBeacon.requestAlwaysAuthorization();
 let delegate = IBeacon.Delegate();
 let geolocation = Geolocation;
+geolocation.getCurrentPosition()
+.then((resp) => {
+ // resp.coords.latitude
+ // resp.coords.longitude
+ console.log(resp.coords.latitude, resp.coords.longitude, resp.coords.accuracy);
+}).catch((error) => {
+  console.log('Error getting location', error);
+});
 delegate.didRangeBeaconsInRegion()
 .subscribe(
   data =>  {
@@ -35,16 +43,10 @@ delegate.didRangeBeaconsInRegion()
 },
   error => console.error()
 );
-geolocation.getCurrentPosition().then((resp) => {
- // resp.coords.latitude
- // resp.coords.longitude
- console.log(resp);
-}).catch((error) => {
-  console.log('Error getting location', error);
-});
+
 IBeacon.startRangingBeaconsInRegion(beaconRegion)
 .then(
-  error => {alert(error); console.log(error)}
+  error => { console.log(error)}
 );
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
