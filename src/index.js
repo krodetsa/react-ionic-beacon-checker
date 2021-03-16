@@ -37,39 +37,7 @@ import { BackgroundGeolocation} from '@ionic-native/background-geolocation';
   delegate.didRangeBeaconsInRegion()
   .subscribe(
     data =>  {
-
-      if (data.beacons.length > 0) {
-
-        var arr = [];
-        if(data.beacons !== []) {
-          data.beacons.forEach((item, i) => {
-            arr.push({
-              minor: item.minor,
-              major: item.major,
-              rssi: item.rssi,
-              proximity: item.proximity
-            });
-
-          });
-          console.log("Beacons found " + data.beacons)
-          logToDom("Beacons found " + data.beacons)
-          axios({
-            method: 'post',
-            url: 'https://egts.ficom-it.info/api/request.php',
-            data: {
-              aksi: 'egts',
-              uid: '1111222233335',
-              beacons: data.beacons
-          }
-        })
-        // data.beacons = [];
-      }
-    }
-    if (data.beacons.length == 0 ) {
-
-
       backgroundGeolocation.checkStatus(function(status) {
-
       backgroundGeolocation.getCurrentLocation().then( res => {
         axios({
             method: 'post',
@@ -77,12 +45,11 @@ import { BackgroundGeolocation} from '@ionic-native/background-geolocation';
             data: {
               aksi: 'egts',
               uid: '1111222233335',
-              beacons: [],
+              beacons: data.beacons,
               coord: res
           }
         });
-        logToDom('GPS found ' + JSON.stringify(res))
-        console.log('GPS found ' + JSON.stringify(res));
+        logToDom(data.beacons.length > 0  ? JSON.stringify(data.beacons) : res.latitude);
         }
       )
 
@@ -90,8 +57,6 @@ import { BackgroundGeolocation} from '@ionic-native/background-geolocation';
         backgroundGeolocation.start(); //triggers start on start event
       }
     });
-      };
-
   },
     error => console.error()
   );
