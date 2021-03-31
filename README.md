@@ -1,5 +1,5 @@
 # react-ionic-beacon-checker
-Simple iBeacon checker powered with React Js and Ionic framework
+Simple iBeacon checker powered with React Js and Ionic framework.
 
 ## Installation 
 ```
