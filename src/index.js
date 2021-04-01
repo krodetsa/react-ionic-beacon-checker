@@ -13,9 +13,9 @@ import { BackgroundGeolocation} from '@ionic-native/background-geolocation';
     notificationTitle: 'Background tracking',
     notificationText: 'enabled',
     debug: false,
-    interval: 10000,
-    fastestInterval: 5000,
-    activitiesInterval: 10000,
+    interval: 5000,
+    fastestInterval: 2500,
+    activitiesInterval: 5000,
 
     // customize post properties
     postTemplate: {
@@ -44,7 +44,7 @@ import { BackgroundGeolocation} from '@ionic-native/background-geolocation';
             url: 'https://egts.ficom-it.info/api/request.php',
             data: {
               aksi: 'egts',
-              uid: '1111222233335',
+              uid: '1111222233341',
               beacons: data.beacons,
               coord: res
           }
