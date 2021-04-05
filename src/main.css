@@ -1,0 +1,22 @@
+.msgs p {
+  font-size: 10px;
+  margin: 5px;
+  max-width: 100%;
+}
+.errors p {
+  font-size: 10px;
+  color: red;
+}
+.info,
+.msgs,
+.errors {
+  width: 100%;
+  max-width: 100vw;
+}
+.msgs {
+  height: 400px;
+  overflow-y: scroll;
+}
+#root {
+  width: 100vw;
+}

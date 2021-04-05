@@ -1,72 +1,33 @@
-import * as serviceWorker from './serviceWorker';
-import axios from 'axios';
-import { IBeacon } from '@ionic-native/ibeacon';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App.js'
 
-import { BackgroundGeolocation} from '@ionic-native/background-geolocation';
 // import { Geolocation } from '@ionic-native/geolocation';
-  const backgroundGeolocation = BackgroundGeolocation;
-  backgroundGeolocation.configure({
-    locationProvider: BackgroundGeolocation.ACTIVITY_PROVIDER,
-    desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
-    stationaryRadius: 50,
-    distanceFilter: 50,
-    notificationTitle: 'Background tracking',
-    notificationText: 'enabled',
-    debug: false,
-    interval: 5000,
-    fastestInterval: 2500,
-    activitiesInterval: 5000,
+//
+//
+//   let messages = [];
+//   let errors = []
+//
+// //   var geo = Geolocation;
+//   var logToDom = function (message) {
+//     messages.splice(0, 0, message)
+//     messages.forEach((item, i) => {
+//       if (i < 9) {
+//         var e = document.createElement('div');
+//       	e.innerText = item.toString();
+//       	document.body.appendChild(e);
+//       }
+//     });
+//
+// };
+// var errorToDom = function (message) {
+//   var e = document.createElement('b');
+//   e.innerText = message.toString();
+//   document.body.appendChild(e);
+// };
 
-    // customize post properties
-    postTemplate: {
-      lat: '@latitude',
-      lon: '@longitude',
-      foo: 'bar' // you can also add your own properties
-    }
-  });
-  let beaconRegion = IBeacon.BeaconRegion('test', 'f7826da6-4fa2-4e98-8024-bc5b71e0893e');
-  IBeacon.requestAlwaysAuthorization();
 
-  let delegate = IBeacon.Delegate();
-//   var geo = Geolocation;
-  var logToDom = function (message) {
-	var e = document.createElement('div');
-	e.innerText = message.toString();
-	document.body.appendChild(e);
-};
-  delegate.didRangeBeaconsInRegion()
-  .subscribe(
-    data =>  {
-      backgroundGeolocation.checkStatus(function(status) {
-      backgroundGeolocation.getCurrentLocation().then( res => {
-        axios({
-            method: 'post',
-            url: 'https://egts.ficom-it.info/api/request.php',
-            data: {
-              aksi: 'egts',
-              uid: '1111222233341',
-              beacons: data.beacons,
-              coord: res
-          }
-        });
-        logToDom(data.beacons.length > 0  ? JSON.stringify(data.beacons) : res.latitude);
-        }
-      )
-
-      if (!status.isRunning) {
-        backgroundGeolocation.start(); //triggers start on start event
-      }
-    });
-  },
-    error => console.error()
+  ReactDOM.render(
+    <App/>
+    , document.getElementById('root')
   );
-
-  IBeacon.startRangingBeaconsInRegion(beaconRegion)
-  .then(
-    error => { console.log(error)}
-  );
-  backgroundGeolocation.start();
-  // If you want your app to work offline and load faster, you can change
-  // unregister() to register() below. Note this comes with some pitfalls.
-  // Learn more about service workers: https://bit.ly/CRA-PWA
-  // serviceWorker.unregister();
